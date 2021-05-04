@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * @author A. Khamassi
  */
@@ -5,7 +7,7 @@
 public class CATImpl {
 
     public String[][] map;
-    public Adventurer adventurer;
+    public ArrayList<Adventurer> adventurers;
 
     public CATImpl() {}
 
@@ -18,19 +20,20 @@ public class CATImpl {
      * @param arrX arrival of the adventurer on X axis
      * @param arrY arrival of the adventurer on Y axis
      */
-    public void Move(int depX, int depY, int arrX, int arrY) {
+    public void Move(int index, int depX, int depY, int arrX, int arrY) {
 
         // to prevent IndexOutOfBoundsException, we check first if we are in the range of the map
         if(arrX < 0 || arrX >= map.length || arrY < 0 || arrY >= map[0].length)
             return;
 
-        if(isMountain(arrX, arrY))
+        if(isMountain(arrX, arrY) || mightBeAdventurer(arrX, arrY))
             return;
-        adventurer.setPosition(arrX, arrY);
+        adventurers.get(index).setPosition(arrX, arrY);
         map[depX][depY] = ".";
-        map[arrX][arrY] = adventurer.getName();
-
-        if(isTreasure(arrX, arrY)) CollectTreasure(arrX, arrY);
+        if(isTreasure(arrX, arrY)) CollectTreasure(index, arrX, arrY);
+        else {
+            map[arrX][arrY] = adventurers.get(index).getName();
+        }
     }
 
     /**
@@ -40,35 +43,35 @@ public class CATImpl {
      * @param x position on X axis of the treasure(s) on the map
      * @param y position on Y axis of the treasure(s) on the map
      */
-    public void CollectTreasure(int x, int y) {
+    public void CollectTreasure(int index, int x, int y) {
 
         int nbTreasures = Integer.parseInt(map[x][y].replaceAll("[\\D]", ""));
+        int collected = 0;
 
         while(nbTreasures > 0) {
             if(!isMountain(x+1, y)) {
-                Move(x, y, x+1, y);
-                Move(x+1, y, x, y);
+                Move(index, x, y, x+1, y);
+                Move(index,x+1, y, x, y);
             }
             else if(!isMountain(x, y+1)) {
-                Move(x, y, x, y+1);
-                Move(x, y+1, x, y);
+                Move(index, x, y, x, y+1);
+                Move(index, x, y+1, x, y);
             }
             else if(!isMountain(x-1, y)) {
-                Move(x, y, x-1, y);
-                Move(x-1, y, x, y);
+                Move(index, x, y, x-1, y);
+                Move(index, x-1, y, x, y);
             }
             else if(!isMountain(x, y-1)) {
-                Move(x, y, x, y-1);
-                Move(x, y-1, x, y);
+                Move(index, x, y, x, y-1);
+                Move(index, x, y-1, x, y);
             }
 
             nbTreasures--;
+            adventurers.get(index).setTreasures(++collected);
         }
 
-        System.out.println("Collected");
-
         // update the map to indicate there is no treasure left
-        map[x][y] = ".";
+        map[x][y] = adventurers.get(index).getName();
     }
 
     /**
@@ -94,5 +97,11 @@ public class CATImpl {
 
         if(map[x][y].matches("^\\b[T][0-9]{1,1}?$")) return true;
         return false;
+    }
+
+    public boolean mightBeAdventurer(int x, int y) {
+
+        if(map[x][y] == "." || isTreasure(x, y) || isMountain(x, y) ) return false;
+        return true;
     }
 }

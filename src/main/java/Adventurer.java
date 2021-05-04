@@ -4,6 +4,7 @@ public class Adventurer {
     private String name;
     private int pX, pY;
     private String[] moves;
+    private int treasures = 0;
 
     /**
      * @param orientation current orientation of the adventurer
@@ -59,6 +60,14 @@ public class Adventurer {
 
     public void setMoves(String moves) {
         this.moves = moves.split("");
+    }
+
+    public int getTreasures() {
+        return treasures;
+    }
+
+    public void setTreasures(int t) {
+        this.treasures = t;
     }
 
 }
