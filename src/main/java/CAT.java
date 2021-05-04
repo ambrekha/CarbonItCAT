@@ -10,6 +10,11 @@ public class CAT {
     static CATImpl cat = new CATImpl();
     static ArrayList<Adventurer> adventurers;
 
+    /**
+     * Reads the input file "in.txt" and parse it to extract info about adventurers, treasures and moutains
+     * Initializes the map with those extracted info
+     * @throws Exception if the .txt file cannot be read for any reason
+     */
     public static void ReadInFile() throws Exception {
 
         System.out.println("reading");
@@ -49,6 +54,11 @@ public class CAT {
         }
     }
 
+    /**
+     * Sets up and runs the CATImpl class
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception{
 
         System.out.println("starting");
@@ -57,12 +67,23 @@ public class CAT {
 
         ReadInFile();
 
+        // finishing the initialisation of map
+        for(int i = 0; i < cat.map.length; i++) {
+            for(int j = 0; j < cat.map[0].length; j++) {
+                if(cat.map[i][j] == null) {
+                    cat.map[i][j] = ".";
+                }
+            }
+        }
+
         // Since we don't know how many Adventurers have enrolled, we use ArrayList as they are resizable.
         ArrayList<String[]> moves = new ArrayList<>();
         ArrayList<String> orientations = new ArrayList<>();
 
         int i = 0;
 
+        // Every Adventurer starts and ends their journey before the next one can start it
+        // So if the second adventurers are lucky enough, some treasures are left
         for(Adventurer ad : adventurers) {
             moves.add(ad.getMoves());
             orientations.add(ad.getOrientation());
@@ -134,10 +155,8 @@ public class CAT {
                 }
                 j++;
             }
+            System.out.println(adventurers.get(i).getName() + " has finished.");
             i++;
         }
-
-        for(Adventurer adventurer : adventurers)
-            System.out.println(adventurer.getName() + " has finished.");
     }
 }

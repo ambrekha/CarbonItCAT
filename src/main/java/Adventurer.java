@@ -25,10 +25,6 @@ public class Adventurer {
         return orientation;
     }
 
-    public void setOrientation(String orientation) {
-        this.orientation = orientation;
-    }
-
     public void setPosition(int x, int y) {
         this.pX = x;
         this.pY = y;
@@ -38,16 +34,8 @@ public class Adventurer {
         return pX;
     }
 
-    public void setpX(int pX) {
-        this.pX = pX;
-    }
-
     public int getpY() {
         return pY;
-    }
-
-    public void setpY(int pY) {
-        this.pY = pY;
     }
 
     public String[] getMoves() {
@@ -60,10 +48,6 @@ public class Adventurer {
 
     public void setMoves(String moves) {
         this.moves = moves.split("");
-    }
-
-    public int getTreasures() {
-        return treasures;
     }
 
     public void setTreasures(int t) {
